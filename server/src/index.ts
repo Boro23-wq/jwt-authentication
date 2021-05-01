@@ -42,6 +42,10 @@ import { sendRefreshToken } from './helper/sendRefreshToken';
       res.send({ ok: false, accessToken: '' });
     }
 
+    if (user!.tokenVersion !== payload.tokenVersion) {
+      res.send({ ok: false, accessToken: '' });
+    }
+
     sendRefreshToken(res, createRefreshToken(user!));
 
     return res.send({ ok: true, accessToken: createAccessToken(user!) });
@@ -58,7 +62,7 @@ import { sendRefreshToken } from './helper/sendRefreshToken';
 
   apolloServer.applyMiddleware({ app });
 
-  app.listen(3000, () => {
-    console.log('Server ready at PORT 3000!');
+  app.listen(5000, () => {
+    console.log('Server ready at PORT 5000!');
   });
 })();

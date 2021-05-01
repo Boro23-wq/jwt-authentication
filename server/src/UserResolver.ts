@@ -2,6 +2,7 @@ import {
   Arg,
   Ctx,
   Field,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -23,6 +24,7 @@ import { createAccessToken, createRefreshToken } from './helper/auth';
 // import middlewares
 import { isAuth } from './middleware/isAuth';
 import { sendRefreshToken } from './helper/sendRefreshToken';
+import { getConnection } from 'typeorm';
 
 @ObjectType()
 class LoginResponse {
@@ -88,14 +90,20 @@ export class UserResolver {
       throw new Error('Invalid email or password!');
     }
 
-    // user is present and password matches
-    // return an access token
-
     sendRefreshToken(res, createRefreshToken(user));
 
     return {
       message: 'User successfully logged in!',
       accessToken: createAccessToken(user),
     };
+  }
+
+  @Mutation(() => Boolean)
+  async revokeRefreshTokensForAUser(@Arg('userId', () => Int) userId: number) {
+    getConnection()
+      .getRepository(User)
+      .increment({ id: userId }, 'tokenVersion', 1);
+
+    return true;
   }
 }
