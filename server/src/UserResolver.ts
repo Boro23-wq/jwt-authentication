@@ -22,6 +22,7 @@ import { createAccessToken, createRefreshToken } from './helper/auth';
 
 // import middlewares
 import { isAuth } from './middleware/isAuth';
+import { sendRefreshToken } from './helper/sendRefreshToken';
 
 @ObjectType()
 class LoginResponse {
@@ -34,11 +35,6 @@ class LoginResponse {
 
 @Resolver()
 export class UserResolver {
-  @Query(() => String)
-  hello() {
-    return 'Hello World!';
-  }
-
   @Query(() => [User])
   users() {
     return User.find();
@@ -95,7 +91,7 @@ export class UserResolver {
     // user is present and password matches
     // return an access token
 
-    res.cookie('refreshToken', createRefreshToken(user), { httpOnly: true });
+    sendRefreshToken(res, createRefreshToken(user));
 
     return {
       message: 'User successfully logged in!',

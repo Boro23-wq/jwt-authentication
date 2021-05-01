@@ -2,7 +2,7 @@
   "type": "postgres",
   "host": "localhost",
   "port": 5432,
-  "username": "boro",
+  "username": "sintuboro",
   "password": "postgres",
   "database": "jwt-auth",
   "synchronize": true,
