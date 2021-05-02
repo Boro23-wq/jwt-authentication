@@ -1,32 +1,19 @@
-import { ColorModeScript } from '@chakra-ui/react';
-import * as React from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import {
-  ApolloClient,
-  HttpLink,
-  InMemoryCache,
-  NormalizedCacheObject,
-} from '@apollo/client';
 import { ApolloProvider } from '@apollo/react-hooks';
-import { App } from './App';
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import { Routes } from './Routes';
 
-const client = new ApolloClient<NormalizedCacheObject>({
+const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({
     uri: 'http://localhost:5000/graphql',
-    // headers: {
-    //   authorization: localStorage.getItem('token'),
-    // },
   }),
 });
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <React.StrictMode>
-      <ColorModeScript />
-      <App />
-    </React.StrictMode>
+    <Routes />
   </ApolloProvider>,
-
   document.getElementById('root')
 );
