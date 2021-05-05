@@ -5,6 +5,7 @@ import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import { UserResolver } from './UserResolver';
 import { createConnection } from 'typeorm';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { verify } from 'jsonwebtoken';
 import { User } from './entity/User';
@@ -14,6 +15,12 @@ import { sendRefreshToken } from './helper/sendRefreshToken';
 (async () => {
   const app = express();
   app.use(cookieParser());
+  app.use(
+    cors({
+      origin: 'http://localhost:3000',
+      credentials: true,
+    })
+  );
 
   process.on('unhandledRejection', (err) => {
     throw err;
@@ -34,6 +41,7 @@ import { sendRefreshToken } from './helper/sendRefreshToken';
     } catch (err) {
       console.log(err);
       res.send({ ok: false, accessToken: '' });
+      return '';
     }
 
     const user = await User.findOne({ id: payload.userId });
@@ -60,7 +68,7 @@ import { sendRefreshToken } from './helper/sendRefreshToken';
     context: ({ req, res }) => ({ req, res }),
   });
 
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({ app, cors: false });
 
   app.listen(5000, () => {
     console.log('Server ready at PORT 5000!');

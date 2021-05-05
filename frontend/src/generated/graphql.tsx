@@ -78,6 +78,14 @@ export type LoginMutation = (
   ) }
 );
 
+export type ProtectedRouteQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ProtectedRouteQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'protectedRoute'>
+);
+
 export type RegisterMutationVariables = Exact<{
   username: Scalars['String'];
   email: Scalars['String'];
@@ -88,6 +96,17 @@ export type RegisterMutationVariables = Exact<{
 export type RegisterMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'register'>
+);
+
+export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UsersQuery = (
+  { __typename?: 'Query' }
+  & { users: Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'username' | 'email'>
+  )> }
 );
 
 
@@ -126,6 +145,38 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const ProtectedRouteDocument = gql`
+    query ProtectedRoute {
+  protectedRoute
+}
+    `;
+
+/**
+ * __useProtectedRouteQuery__
+ *
+ * To run a query within a React component, call `useProtectedRouteQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProtectedRouteQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProtectedRouteQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useProtectedRouteQuery(baseOptions?: Apollo.QueryHookOptions<ProtectedRouteQuery, ProtectedRouteQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProtectedRouteQuery, ProtectedRouteQueryVariables>(ProtectedRouteDocument, options);
+      }
+export function useProtectedRouteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProtectedRouteQuery, ProtectedRouteQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProtectedRouteQuery, ProtectedRouteQueryVariables>(ProtectedRouteDocument, options);
+        }
+export type ProtectedRouteQueryHookResult = ReturnType<typeof useProtectedRouteQuery>;
+export type ProtectedRouteLazyQueryHookResult = ReturnType<typeof useProtectedRouteLazyQuery>;
+export type ProtectedRouteQueryResult = Apollo.QueryResult<ProtectedRouteQuery, ProtectedRouteQueryVariables>;
 export const RegisterDocument = gql`
     mutation Register($username: String!, $email: String!, $password: String!) {
   register(username: $username, email: $email, password: $password)
@@ -159,3 +210,39 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const UsersDocument = gql`
+    query Users {
+  users {
+    id
+    username
+    email
+  }
+}
+    `;
+
+/**
+ * __useUsersQuery__
+ *
+ * To run a query within a React component, call `useUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUsersQuery(baseOptions?: Apollo.QueryHookOptions<UsersQuery, UsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
+      }
+export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersQuery, UsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
+        }
+export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
+export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
+export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;
