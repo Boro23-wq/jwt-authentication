@@ -33,6 +33,9 @@ class LoginResponse {
 
   @Field()
   accessToken: string;
+
+  @Field(() => User)
+  user: User;
 }
 
 @Resolver()
@@ -95,6 +98,7 @@ export class UserResolver {
     return {
       message: 'User successfully logged in!',
       accessToken: createAccessToken(user),
+      user,
     };
   }
 

@@ -28,7 +28,7 @@ export const Login: React.FC = () => {
         setAccessToken(res.data.login.accessToken);
       }
 
-      window.alert('User successfully logged in!');
+      // window.alert('User successfully logged in!');
       console.log(res);
     } catch (err) {
       console.log(err);

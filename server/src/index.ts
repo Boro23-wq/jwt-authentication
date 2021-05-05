@@ -14,13 +14,14 @@ import { sendRefreshToken } from './helper/sendRefreshToken';
 
 (async () => {
   const app = express();
-  app.use(cookieParser());
   app.use(
     cors({
       origin: 'http://localhost:3000',
       credentials: true,
     })
   );
+
+  app.use(cookieParser());
 
   process.on('unhandledRejection', (err) => {
     throw err;
@@ -31,8 +32,10 @@ import { sendRefreshToken } from './helper/sendRefreshToken';
   app.post('/refresh_token', async (req, res) => {
     const token = req.cookies.refreshToken;
 
+    // console.log(res);
+
     if (!token) {
-      res.send({ ok: false, accessToken: '' });
+      return res.send({ ok: false, accessToken: '' });
     }
 
     let payload: any = null;
@@ -40,18 +43,17 @@ import { sendRefreshToken } from './helper/sendRefreshToken';
       payload = verify(token, process.env.REFRESH_TOKEN_SECRET!);
     } catch (err) {
       console.log(err);
-      res.send({ ok: false, accessToken: '' });
-      return '';
+      return res.send({ ok: false, accessToken: '' });
     }
 
     const user = await User.findOne({ id: payload.userId });
 
     if (!user) {
-      res.send({ ok: false, accessToken: '' });
+      return res.send({ ok: false, accessToken: '' });
     }
 
     if (user!.tokenVersion !== payload.tokenVersion) {
-      res.send({ ok: false, accessToken: '' });
+      return res.send({ ok: false, accessToken: '' });
     }
 
     sendRefreshToken(res, createRefreshToken(user!));
