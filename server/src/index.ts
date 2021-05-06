@@ -23,9 +23,9 @@ import { sendRefreshToken } from './helper/sendRefreshToken';
 
   app.use(cookieParser());
 
-  process.on('unhandledRejection', (err) => {
-    throw err;
-  });
+  // process.on('unhandledRejection', (err) => {
+  //   throw err;
+  // });
 
   app.get('/', (_req, res) => res.send('Hello World!'));
 
@@ -56,9 +56,9 @@ import { sendRefreshToken } from './helper/sendRefreshToken';
       return res.send({ ok: false, accessToken: '' });
     }
 
-    sendRefreshToken(res, createRefreshToken(user!));
+    sendRefreshToken(res, createRefreshToken(user));
 
-    return res.send({ ok: true, accessToken: createAccessToken(user!) });
+    return res.send({ ok: true, accessToken: createAccessToken(user) });
   });
 
   await createConnection();

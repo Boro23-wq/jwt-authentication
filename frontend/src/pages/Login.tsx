@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 
 import { Nav } from '../components/Nav';
+
 import { useLoginMutation } from '../generated/graphql';
 import { setAccessToken } from '../global/accessToken';
 
-export const Login: React.FC = () => {
+export const Login: React.FC<RouteComponentProps> = ({ history }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -13,26 +15,23 @@ export const Login: React.FC = () => {
   const onSubmit = async (e: any) => {
     e.preventDefault();
 
-    try {
-      const res = await login({
-        variables: {
-          email,
-          password,
-        },
-      });
+    const res = await login({
+      variables: {
+        email,
+        password,
+      },
+    });
 
-      setEmail('');
-      setPassword('');
+    setEmail('');
+    setPassword('');
 
-      if (res && res.data) {
-        setAccessToken(res.data.login.accessToken);
-      }
+    console.log(res);
 
-      // window.alert('User successfully logged in!');
-      console.log(res);
-    } catch (err) {
-      console.log(err);
+    if (res && res.data) {
+      setAccessToken(res.data.login.accessToken);
     }
+
+    history.push('/');
   };
   return (
     <>
